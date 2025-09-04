@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	//"html/template"
 	"net/http"
 	"strconv"
+
+
 	"github.com/omzamirr/snippetbox/pkg/models"
 )
 
@@ -20,14 +21,16 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for _, snippet := range s {
-		fmt.Fprintf(w, "%v\n", snippet)
-	}
+	app.render(w, r, "home.page.tmpl", &templateData{
+		Snippets: s,
+	})
+
+	// data := &templateData{Snippets: s}
 
 	// files := []string{
-	// 	"./ui/html/base.layout.tmpl",
-	// 	"./ui/html/home.page.tmpl",
-	// 	"./ui/html/footer.partial.tmpl",
+    // 	"./ui/html/home.page.tmpl",
+    // 	"./ui/html/base.layout.tmpl", 
+    // 	"./ui/html/footer.partial.tmpl",
 	// }
 
 	// ts, err := template.ParseFiles(files...)
@@ -36,8 +39,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	// 	return
 	// }
 
-
-	// err = ts.Execute(w, nil)
+	// err = ts.Execute(w, data)
 	// if err != nil {
 	// 	app.serverError(w, err)
 	// }
@@ -60,7 +62,32 @@ func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprintf(w, "%v", s)
+	app.render(w, r, "show.page.tmpl", &templateData{
+		Snippet: s,
+	})
+
+	// data := &templateData{Snippet: s}
+
+	// files := []string{
+	// 	"./ui/html/show.page.tmpl",
+	// 	"./ui/html/base.layout.tmpl",
+	// 	"./ui/html/footer.partial.tmpl",
+
+	// }
+
+	// ts, err := template.ParseFiles(files...)
+	
+	// if err != nil {
+	// 	app.serverError(w, err)
+	// 	return
+	// }
+
+	// err = ts.Execute(w, data)
+	// if err != nil {
+	// 	app.serverError(w, err)
+	// }
+
+	
 }
 
 func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
