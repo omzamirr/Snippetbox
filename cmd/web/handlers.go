@@ -22,25 +22,6 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		Snippets: s,
 	})
 
-	// data := &templateData{Snippets: s}
-
-	// files := []string{
-    // 	"./ui/html/home.page.tmpl",
-    // 	"./ui/html/base.layout.tmpl", 
-    // 	"./ui/html/footer.partial.tmpl",
-	// }
-
-	// ts, err := template.ParseFiles(files...)
-	// if err != nil {
-	// 	app.serverError(w, err)
-	// 	return
-	// }
-
-	// err = ts.Execute(w, data)
-	// if err != nil {
-	// 	app.serverError(w, err)
-	// }
-
 }
 
 func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
@@ -63,28 +44,7 @@ func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
 		Snippet: s,
 	})
 
-	// data := &templateData{Snippet: s}
 
-	// files := []string{
-	// 	"./ui/html/show.page.tmpl",
-	// 	"./ui/html/base.layout.tmpl",
-	// 	"./ui/html/footer.partial.tmpl",
-
-	// }
-
-	// ts, err := template.ParseFiles(files...)
-	
-	// if err != nil {
-	// 	app.serverError(w, err)
-	// 	return
-	// }
-
-	// err = ts.Execute(w, data)
-	// if err != nil {
-	// 	app.serverError(w, err)
-	// }
-
-	
 }
 
 func (app * application) createSnippetForm(w http.ResponseWriter, r * http.Request) {
@@ -95,9 +55,15 @@ func (app * application) createSnippetForm(w http.ResponseWriter, r * http.Reque
 
 func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 
-	title := "O snail"
-	content := "O snail\nClimb Mount Fuji,\nBut slowly, slowly!\n\n– Kobayashi"
-	expires := "7"
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	title := r.PostForm.Get("title")
+	content := r.PostForm.Get("content")
+	expires := r.PostForm.Get("expires")
 
 	id, err := app.snippets.Insert(title, content, expires)
 	if err != nil {
